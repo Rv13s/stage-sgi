@@ -5,14 +5,14 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
 import base.BaseTest;
-import pages.HomePage;
+import pages.CarHomePage;
 import pages.OtpPage;
 
 public class LoginTest extends BaseTest{
 
 	//@Test (priority = 1)
 	public void testLogin() {
-		HomePage homePage = new HomePage(driver);
+		CarHomePage homePage = new CarHomePage(driver);
 		homePage.login("TN01GH1234", "7010101010");
 		
 	}
@@ -20,7 +20,7 @@ public class LoginTest extends BaseTest{
 
 	@Test 
 	public void invalidRegNum() throws InterruptedException {
-		HomePage homePage = new HomePage(driver);
+		CarHomePage homePage = new CarHomePage(driver);
 		homePage.enterCarRegnum("Tn0122");
 		homePage.enterMobNum("7010101010");
 		homePage.acceptTerms();
@@ -35,7 +35,7 @@ public class LoginTest extends BaseTest{
 	
 	//@Test 
 	public void invalidMobNum() throws InterruptedException {
-		HomePage homePage = new HomePage(driver);
+		CarHomePage homePage = new CarHomePage(driver);
 		homePage.enterCarRegnum("Tn0N1122");
 		homePage.enterMobNum("70101010");
 		homePage.acceptTerms();
