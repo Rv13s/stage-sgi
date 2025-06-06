@@ -44,5 +44,17 @@ public class OtpPage {
 		clickContinueButton.click();
 		
 	}
+	
+	
+	public void fillOtp(String otp) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(12));
+	    wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(otpFields[0]));
+		
+		for(int i=0;i<otp.length();i++) {
+			driver.findElement(otpFields[i]).sendKeys(Character.toString(otp.charAt(i)));
+		}
+		
+		clickContinueButton.click();
+	}
 
 }

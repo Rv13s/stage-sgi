@@ -52,7 +52,9 @@ private Actions actions;
     
     		wait.until(ExpectedConditions.elementToBeClickable(carRegNo));
     		
-    		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", carRegNo);
+    		//((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", carRegNo);
+    		
+    		
     		
 //    		((JavascriptExecutor) driver).executeScript(
 //    	            "arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));",
@@ -61,6 +63,8 @@ private Actions actions;
     		
     		
     		//actions.moveToElement(carRegNo).build().perform();
+    		
+    		((JavascriptExecutor) driver).executeScript("arguments[0].click();", carRegNo);
     		carRegNo.clear();
         	carRegNo.click();
         	carRegNo.sendKeys(regNum);
