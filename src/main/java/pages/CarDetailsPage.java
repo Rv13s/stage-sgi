@@ -20,19 +20,19 @@ import utils.WaitUntil;
 
 //import Locations.fwpaths;
 
-public class CarDetailsPage {
+public class CarDetailsPage extends BasePage {
 
-	private WebDriver driver;
+//	private WebDriver driver;
 	private Actions actions;
-	private WaitUntil waitUntil;
-	private WebDriverWait wait;
+//	private WaitUntil waitUntil;
+//	private WebDriverWait wait;
 
 	public CarDetailsPage(WebDriver driver) {
-		this.driver = driver;
-		PageFactory.initElements(driver, this);
-		this.actions = new Actions(driver);
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
+//		this.driver = driver;
+//		PageFactory.initElements(driver, this);
+//		this.actions = new Actions(driver);
+//		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		super(driver);
 	}
 
 	@FindBy(name = "c_vd_MakeModel")
@@ -514,9 +514,13 @@ public class CarDetailsPage {
 	public boolean isCarDetailsPage() {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-			//wait.until(ExpectedConditions.visibilityOfElementLocated(pageHeader));
-			//wait.until(ExpectedConditions.presenceOfElementLocated(pageCheckRegNUm);
-			wait.until(ExpectedConditions.visibilityOf(carDetailsPageContinueButton));
+			
+//			wait.until(ExpectedConditions.visibilityOf(editButton));
+//			wait.until(ExpectedConditions.visibilityOf(carDetailsPageContinueButton));
+			
+			wait.until(ExpectedConditions.or(ExpectedConditions.visibilityOf(editButton),
+					ExpectedConditions.visibilityOf(carDetailsPageContinueButton)));
+			
 			System.out.println("Car Details Page detected");
 			return true;
 		} catch (TimeoutException e) {

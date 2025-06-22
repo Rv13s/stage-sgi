@@ -105,9 +105,11 @@ public class VerifyPolicyDetailsPage extends BaseTest {
 
 	@FindBy(xpath = "(//button[@id='ckycFormPage'])[1]")
 	private WebElement kycProceedButton;
+	
+	
 
 	public void enterChassisNumber(String chassisNumber) {
-
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 		try {
 			// clickChassisEditButtonIfEnable(chassisNumber, chassisNumber);
 			wait.until(ExpectedConditions.visibilityOf(new_chassisNumber));
@@ -132,7 +134,7 @@ public class VerifyPolicyDetailsPage extends BaseTest {
 	}
 
 	public void clickChassisEditButtonIfEnable(String chassisNumber, String engineNumber) {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
 		try {
 
@@ -316,6 +318,7 @@ public class VerifyPolicyDetailsPage extends BaseTest {
 	        wait.until(ExpectedConditions.elementToBeClickable(carPolicyInfoFormSubmit));
 	        carPolicyInfoFormSubmit.click();
 	        System.out.println("✅ Continue button clicked");
+	        
 	        
 	        // ✅ Handle modal if it appears AFTER clicking
 	        

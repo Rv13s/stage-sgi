@@ -22,6 +22,7 @@ protected WebDriver driver;
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.get("http://stage.shriramgi.com/");
+		//driver.get("http://192.169.1.91/ziva/GI.Common/Home/Login.aspx");
 	}
 	
    
