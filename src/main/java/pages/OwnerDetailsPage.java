@@ -1,4 +1,4 @@
-package pages;
+	package pages;
 
 import java.time.Duration;
 import java.util.List;
@@ -79,7 +79,8 @@ public class OwnerDetailsPage extends BaseTest {
 	private static WebElement YearDropdown;
 
 	// dobDay
-	@FindBy(xpath = "//table[@class='ui-datepicker-calendar']//a[@class='ui-state-default']")
+	//@FindBy(xpath = "//table[@class='ui-datepicker-calendar']//a[@class='ui-state-default']") 
+	@FindBy(css = "table.ui-datepicker-calendar td a.ui-state-default")
 	private List<WebElement> Date;
 
 	// ow_nomineeName = driver.findElement(By.id("ow_nomineeName"));
@@ -144,13 +145,13 @@ public class OwnerDetailsPage extends BaseTest {
 		panNum.sendKeys(panNumber);
 	}
 
-	public void enterPanDOB(String day, String month, String year) {
+	public void enterPanDOB(String panDate, String panMon, String panYear) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 		try {
 
 //			js.executeScript("arguments[0].scrollIntoView(true);", panDOB);
 //	        js.executeScript("arguments[0].click();", panDOB);
-
+			//panDOB.clear();
 			// Step 1: Open the calendar safely using JavaScript
 			((JavascriptExecutor) driver).executeScript("arguments[0].click();", panDOB);
 
@@ -159,11 +160,11 @@ public class OwnerDetailsPage extends BaseTest {
 
 			wait.until(ExpectedConditions.visibilityOf(MonthDropdown));
 			Select selectMonth = new Select(MonthDropdown);
-			selectMonth.selectByVisibleText(month);
+			selectMonth.selectByVisibleText(panMon);
 
 			wait.until(ExpectedConditions.visibilityOf(YearDropdown));
 			Select selectYear = new Select(YearDropdown);
-			selectYear.selectByVisibleText(year);
+			selectYear.selectByVisibleText(panYear);
 /*
 			List<WebElement> dates = driver.findElements(By.xpath("//table[@class='ui-datepicker-calendar']//a[@class='ui-state-default']"));
 	        for (WebElement dateElement : dates) {
@@ -175,16 +176,34 @@ public class OwnerDetailsPage extends BaseTest {
 			
 			*/
 			
+			  List<WebElement> dateElements = driver.findElements(By.cssSelector("table.ui-datepicker-calendar td a.ui-state-default"));
+
+		        boolean dateFound = false;
+		        for (WebElement dateElement : dateElements) {
+		            if (dateElement.getText().trim().equals(panDate)) {
+		                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", dateElement);
+		                wait.until(ExpectedConditions.elementToBeClickable(dateElement)).click();
+		                dateFound = true;
+		                break;
+		            }
+		        }
+			
+		        if (!dateFound) {
+		            System.out.println("❌ Date " + panDate + " not found in the calendar.");
+		        }
+			
+			
+			/*
 			wait.until(ExpectedConditions.visibilityOfAllElements(Date));
 
 			for (WebElement selectDate : Date) {
-				if (selectDate.getText().equals(day)) {
+				if (selectDate.getText().equals(panDate)) {
 					selectDate.click();
 					break;
 				}
 			}
 			
-			
+			*/
 			
 			
 			
@@ -240,7 +259,25 @@ public class OwnerDetailsPage extends BaseTest {
 		proceedBtn.click();
 	}
 	
-	
+	public void ckycFailedModel(){
+		
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebElement modal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".modal.show")));
+			if(modal.isDisplayed()) {
+				System.out.println("Modal is displayed");
+			}else {
+				System.out.println("Modal not displayed");
+			}
+			
+			WebElement OtherOptionCkyc = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("OtherOptionCkyc")));
+			OtherOptionCkyc.click();
+		}
+		catch(Exception E) {
+			System.out.println("Owner Details Page: CKYC Failure model : " + E.getMessage());
+		}	
+		
+	}	
 	
 	
 	
@@ -251,49 +288,73 @@ public class OwnerDetailsPage extends BaseTest {
 	}
 
 	
+	
 	public boolean isOwnerDetailsPage() {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-			wait.until(ExpectedConditions.visibilityOf(carOwnerFormSubmit));
+			wait.until(ExpectedConditions.visibilityOf(ow_name));
 			return true;
 		}
 		catch(TimeoutException e) {
 		
-			System.out.println(""+e.getMessage());
+			System.out.println("❌ Owner Details Page NOT detected:"+ e.getMessage());
 			return false;
 				
 		}
 	}
 	
-	public void fillOwnerDetailsPage() {
+	public void fillOwnerDetailsPage(String fullName, String email, String add1, String add2, String pincode,
+			String panNo, String panDate, String panMon, String panYear, 
+			String nomName, String nomRelationship, String nomAge) {
 		try {
 			
-			OwnerDetailsPage ownerPage = new OwnerDetailsPage(driver);
-			ownerPage.enterFullName("Kapil Sunil");
-			ownerPage.enterEmail("kapill@sunil.com");
-			ownerPage.enterAddressLine1("Velachery");
-			ownerPage.enterAddressLine2("ALl area");
-			ownerPage.enterPincode("600042");
 			
-			ownerPage.enterPanNum("QWERT1234Y");
-			ownerPage.enterPanDOB("01", "Jan", "2000" );
+			enterFullName(fullName);
+			enterEmail(email);
+			enterAddressLine1(add1);
+			enterAddressLine2(add2);
+			enterPincode(pincode);
 			
-			
-			ownerPage.enterNomineeName("Balaji");
-			ownerPage.selectNomineeRelationship("BROTHER");
-			ownerPage.enterNomineeAge("25");
+			enterPanNum(panNo);
+			enterPanDOB(panDate, panMon, panYear );
 			
 			
+			enterNomineeName(nomName);
+			selectNomineeRelationship(nomRelationship);
+			enterNomineeAge(nomAge);
 			
-			ownerPage.clickContinueButton();
-			ownerPage.ckycSuccessModal();
+			
+			
+			clickContinueButton();
+			//ckycSuccessModal();
+			ckycFailedModel();
+			ckycFailedModel();
 			
 		}catch(Exception e) {
 			System.out.println("Not OwnerDetails Page: " + e.getMessage());
 		}
 	}
 	
+	/*
+	ownerPage.enterFullName("Kapil Sunil");
+	ownerPage.enterEmail("kapill@sunil.com");
+	ownerPage.enterAddressLine1("Velachery");
+	ownerPage.enterAddressLine2("ALl area");
+	ownerPage.enterPincode("600042");
 	
+	ownerPage.enterPanNum("QWERT1234Y");
+	ownerPage.enterPanDOB("01", "Jan", "2000" );
+	
+	
+	ownerPage.enterNomineeName("Balaji");
+	ownerPage.selectNomineeRelationship("BROTHER");
+	ownerPage.enterNomineeAge("25");
+	
+	
+	
+	ownerPage.clickContinueButton();
+	ownerPage.ckycSuccessModal();
+	*/
 	
 	
 	

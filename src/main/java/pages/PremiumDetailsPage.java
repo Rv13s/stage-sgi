@@ -33,6 +33,8 @@ public class PremiumDetailsPage {
 		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 	}
 	
+	@FindBy(id="ElectricalAccessories")
+	private WebElement electricalAccessories;
 	
 	@FindBy(id="carPremiumDetailsFormSubmit")
 	private WebElement  continueButton;
@@ -43,11 +45,13 @@ public class PremiumDetailsPage {
 	public boolean isPremiumDetailsPage() {
 		
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 			wait.until(ExpectedConditions.visibilityOf(continueButton));
+			System.out.println("Premimum details Page Detected");
 			return true;
 		}
 		catch(TimeoutException  e) {
+			System.out.println("❌ Premium Details Page NOT detected: " + e.getMessage());
 			return false;
 		}
 		

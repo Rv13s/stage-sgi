@@ -25,7 +25,7 @@ public class CarInsuanceThroughHomePage extends BaseTest {
 
 		// sgiHome.homeLogo();
 
-		sgiHome.enterCarRegnum("TN01PKM1230");
+		sgiHome.enterCarRegnum("TN01PKM1001");
 		sgiHome.enterMobNum("7010101013");
 		sgiHome.acceptTerms();
 		sgiHome.clickInsureNowBtn();
@@ -77,7 +77,7 @@ public class CarInsuanceThroughHomePage extends BaseTest {
 				ownerPage.enterAddressLine2("ALl area");
 				ownerPage.enterPincode("600042");
 				
-				ownerPage.enterPanNum("QWERT1234Y");
+				ownerPage.enterPanNum("QWERT1234U");
 				ownerPage.enterPanDOB("30", "Jan", "2000" );
 				
 				

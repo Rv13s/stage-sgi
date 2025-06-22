@@ -20,26 +20,26 @@ import utils.WaitUntil;
 
 //import Locations.fwpaths;
 
-public class CarDetailsPage {
+public class CarDetailsPage extends BasePage {
 
-	private WebDriver driver;
+//	private WebDriver driver;
 	private Actions actions;
-	private WaitUntil waitUntil;
-	private WebDriverWait wait;
+//	private WaitUntil waitUntil;
+//	private WebDriverWait wait;
 
 	public CarDetailsPage(WebDriver driver) {
-		this.driver = driver;
-		PageFactory.initElements(driver, this);
-		this.actions = new Actions(driver);
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
+//		this.driver = driver;
+//		PageFactory.initElements(driver, this);
+//		this.actions = new Actions(driver);
+//		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		super(driver);
 	}
 
 	@FindBy(name = "c_vd_MakeModel")
 	private static By pageCheck1;
 
 	// Example locator unique to this page
-	By carDetailsContinueButton = By.id("customVehicleDetailsFormSubmit");
+	By pageCheckRegNUm = By.id("c_regNumber");
 	By pageHeader = By.xpath("//h2[contains(text(),'Your car')]");
 
 	@FindBy(id = "c_regNumber")
@@ -244,31 +244,33 @@ public class CarDetailsPage {
 
 	}
 
-	public void selectDate(String day, String month, String year) throws InterruptedException {
+	
+	public void selectDate(String regDate, String regMon, String regYear) throws InterruptedException {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
 		try {
+			
 			registrationdate.clear();
+			
+			// Click input to open calendar
+	        //wait.until(ExpectedConditions.elementToBeClickable(registrationdate)).click();
 
 			// Wait for the month dropdown
 			wait.until(ExpectedConditions.visibilityOf(MonthDropdown)); 
 			Select selectMonth = new Select(MonthDropdown);
-			selectMonth.selectByVisibleText(month); // e.g., "May"
+			selectMonth.selectByVisibleText(regMon); // e.g., "May"
 
 			// Wait for the year dropdown
+			wait.until(ExpectedConditions.visibilityOf(YearDropdown));
 			Select selectYear = new Select(YearDropdown);
-			selectYear.selectByVisibleText(year); // e.g., "2018"
-
-			// Wait for dates to load
-
-//			    wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
-//			        By.cssSelector("table.ui-datepicker-calendar td[data-handler='selectDay']"))); 
+			selectYear.selectByVisibleText(regYear); // e.g., "2018"
+			
 
 			wait.until(ExpectedConditions.visibilityOfAllElements(Date));
 
 			// Select day
 			for (WebElement dateElement : Date) {
-				if (dateElement.getText().equals(day)) {
+				if (dateElement.getText().equals(regDate)) {
 					dateElement.click();
 					break;
 				}
@@ -278,16 +280,17 @@ public class CarDetailsPage {
 		}
 
 	}
+	
 
 	public void selectYearOfManufacture(String year) {
 		try {
-
+			
 			// Remove readonly attribute if needed
 			((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('readonly');", yearField);
 
 			// Click using JS to avoid label overlapping
 			((JavascriptExecutor) driver).executeScript("arguments[0].click();", yearField);
-
+			yearField.clear();
 			// Send some input to trigger autocomplete dropdown
 			yearField.sendKeys("20");
 
@@ -495,7 +498,7 @@ public class CarDetailsPage {
 			wait.until(ExpectedConditions.elementToBeClickable(editButton)).click();
 			// editButton.click();
 		} catch (Exception e) {
-			System.out.println("catch = edit button:  " + e.getMessage());
+			System.out.println("Edit button is not Available:  " + e.getMessage());
 			e.printStackTrace();
 
 		}
@@ -510,9 +513,15 @@ public class CarDetailsPage {
 
 	public boolean isCarDetailsPage() {
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-			//wait.until(ExpectedConditions.visibilityOfElementLocated(pageHeader));
-			wait.until(ExpectedConditions.presenceOfElementLocated(carDetailsContinueButton));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+			
+//			wait.until(ExpectedConditions.visibilityOf(editButton));
+//			wait.until(ExpectedConditions.visibilityOf(carDetailsPageContinueButton));
+			
+			wait.until(ExpectedConditions.or(ExpectedConditions.visibilityOf(editButton),
+					ExpectedConditions.visibilityOf(carDetailsPageContinueButton)));
+			
+			System.out.println("Car Details Page detected");
 			return true;
 		} catch (TimeoutException e) {
 			 System.out.println("❌ Car Details Page NOT detected: " + e.getMessage());
@@ -521,25 +530,38 @@ public class CarDetailsPage {
 
 	}
 
-	public void fillCarDetailsIfPresent() throws InterruptedException {
+	
+	
+	
+	public void fillCarDetailsIfPresent(String carManuf, String carModel,String regDate, String regMon, String regYear, 
+			String ManufYear, String prvPolType, String prvPolExpDate, String prvPolExpMon, String prvPolExpYear ) throws InterruptedException {
 
-		try {// clickEditButtonIfEnable();
-		carMake("MARUTI SUZUKI");
-		modelVarient("ALTO 800 VXI - PETROL");
+		try {
+			
+		clickEditButtonIfEnable();
+		carMake(carManuf);
+		modelVarient(carModel);
 
-		selectDate("30", "May", "2017");
+		selectDate(regDate, regMon, regYear);
 
-		selectYearOfManufacture("2017");
+		
+		selectYearOfManufacture(ManufYear);
 
-		previousPolicyType("comprehensive");
+		previousPolicyType(prvPolType);
 
-		selectPreviousPolicyExpDate("30", "Jun", "2025");
+		selectPreviousPolicyExpDate(prvPolExpDate, prvPolExpMon, prvPolExpYear);
+		
+		
 		
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
 
 //		clickEditButtonIfEnable();
 //
